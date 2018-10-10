@@ -92,7 +92,7 @@ Public Class PayPayPaymentUPdate
                         TXN.TXNIREF = responseInvoiceDetailObj.number
                         TXN.TXNEREF = primary.INVOICE
                         TXN.EXTREF = responseInvoiceDetailObj.links.LastOrDefault.href
-                        TXN.NARRATION = "Amount " + curr + " " + TopUpInvoice.PAID_AMOUNT + " Credit via Paypal "
+                        TXN.NARRATION = "Amount " + curr + " " + TopUpInvoice.PAID_AMOUNT.ToString() + " Credit via Paypal "
                         'MONTH
                         Dim month = ""
                         'YEAR
