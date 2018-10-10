@@ -17,6 +17,7 @@ Public Class PayPayPaymentUPdate
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
         'Dim connstr = "data source=NITESH-PC;initial catalog=ASTROLOGYSOFTWARE_DB;integrated security=True;"
         Dim connstr = "data source=49.50.103.132;initial catalog=ASTROLOGYSOFTWARE_DB;integrated security=False;User Id=sa;password=pSI)TA1t0K[);"
+        'Dim connstr = "data source=WIN-KSTUPT6CJRC;initial catalog=ASTROLOGYSOFTWARE_DB;integrated security=False;multipleactiveresultsets=True;User Id=sa;password=pSI)TA1t0K[);"
 
         Using cn As New SqlConnection(connstr)
 
@@ -74,6 +75,12 @@ Public Class PayPayPaymentUPdate
                         TXN.TXNACCOUNTUSERID = primary.UID
                         TXN.TXNACCOUNT = User.USERACCOUNTNO
                         TXN.TXNACCOUNTCCY = primary.CURRENCY
+                        Dim curr = ""
+                        If (primary.CURRENCY = "INR") Then
+                            curr = "₹"
+                        Else
+                            curr = "$"
+                        End If
                         ' Need to Add type 
                         TXN.TXNTYPE = 2
                         TXN.TXNDATE = DateTime.UtcNow
@@ -85,7 +92,7 @@ Public Class PayPayPaymentUPdate
                         TXN.TXNIREF = responseInvoiceDetailObj.number
                         TXN.TXNEREF = primary.INVOICE
                         TXN.EXTREF = responseInvoiceDetailObj.links.LastOrDefault.href
-                        TXN.NARRATION = "Amount Credit via Paypal"
+                        TXN.NARRATION = "Amount " + curr + " " + TopUpInvoice.PAID_AMOUNT + " Credit via Paypal "
                         'MONTH
                         Dim month = ""
                         'YEAR
@@ -300,7 +307,7 @@ Public Class PayPayPaymentUPdate
 
 
                     End If
-                    SendMail(primary.UID.Trim(), "abhishek testing")
+
                     If (responseInvoiceDetailObj.status = "CANCELLED") Then
                         primary.PAID_STATUS = "C"
 
@@ -327,7 +334,8 @@ Public Class PayPayPaymentUPdate
 
 
     Public Function SendMail(sender As String, template As String) As String
-        Dim apiKey = "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"
+        Dim apiKey_Old = "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"
+        Dim apiKey = "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"
         Dim client = New SendGridClient(apiKey)
         Dim from = New EmailAddress("kirti.vashishtha@enukesoftware.com", "Kirti Vashishtha")
         Dim subject = "Payment Reciept"
